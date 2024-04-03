@@ -1,0 +1,36 @@
+.header-container {
+  background-color: #272727;
+  padding-left: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-link-container {
+  display: flex;
+  align-items: center;
+}
+.website-form-logo {
+  width: 20vh;
+  align-self: center;
+  margin-left: 30px;
+}
+.find-jobs-button {
+  background-color: #4f46e5;
+  margin-top: 10px;
+  border: none;
+  color: white;
+  padding: 8px;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+.nav-link {
+  list-style-type: none;
+}
+.nav-item {
+  list-style-type: none;
+  text-decoration: none;
+  margin-left: 10px;
+  margin-right: 10px;
+}
