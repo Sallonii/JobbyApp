@@ -33,4 +33,32 @@
   text-decoration: none;
   margin-left: 10px;
   margin-right: 10px;
+  color: white;
+}
+
+@media screen and (max-width: 767px) {
+  .desktop-nav-item {
+    display: none;
+  }
+  .desktop-logout-button {
+    display: none;
+  }
+}
+
+span {
+  display: none;
+}
+.find-jobs-sm-button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+}
+@media screen and (min-width: 768px) {
+  .find-jobs-sm-button {
+    display: none;
+  }
+  .mobile-nav-item {
+    display: none;
+  }
 }

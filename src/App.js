@@ -3,6 +3,7 @@ import {Switch, Route} from 'react-router-dom'
 import LoginForm from './component/LoginForm'
 import ProtectedRoute from './component/ProtectedRoute'
 import Home from './component/Home'
+import Jobs from './component/Jobs'
 
 import './App.css'
 
@@ -50,6 +51,17 @@ const App = () => (
   <Switch>
     <Route exact path="/login" component={LoginForm} />
     <ProtectedRoute exact path="/" component={Home} />
+    <ProtectedRoute
+      exact
+      path="/jobs"
+      render={props => (
+        <Jobs
+          {...props}
+          employmentTypesList={employmentTypesList}
+          salaryRangesList={salaryRangesList}
+        />
+      )}
+    />
   </Switch>
 )
 

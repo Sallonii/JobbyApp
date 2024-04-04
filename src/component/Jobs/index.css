@@ -1,0 +1,116 @@
+.jobs-section-container {
+  background-color: black;
+  padding: 10px;
+  min-height: 95vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-style: solid;
+  border-color: white;
+}
+.profile-and-category-container {
+  height: 65vh;
+  padding: 10px;
+  border-style: solid;
+  border-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  order: 1;
+}
+
+@media screen and (min-width: 767px) {
+  .jobs-section-container {
+    flex-direction: row;
+  }
+  .profile-and-category-container {
+    width: 40%;
+    order: 0;
+    height: 80vh;
+  }
+}
+.profile-card {
+  background-image: url('https://assets.ccbp.in/frontend/react-js/profile-bg.png');
+  background-size: cover;
+  width: 100%;
+  padding: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.profile-heading {
+  font-size: 20px;
+}
+.profile-description {
+  font-size: 15px;
+}
+.profile {
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+}
+hr {
+  width: 100%;
+}
+.category-heading {
+  font-size: 15px;
+  color: white;
+}
+
+.employment-type-list {
+  list-style-type: none;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+.input-element {
+  margin-right: 10px;
+  cursor: pointer;
+}
+.jobs-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  max-width: 400px;
+}
+@media screen and (min-width: 767px) {
+  .jobs-container {
+    width: 60%;
+  }
+}
+.jobs-search-input-container {
+  width: 90%;
+  border-style: solid;
+  border-color: white;
+  height: 30px;
+  border-radius: 5px;
+  display: flex;
+}
+.jobs-search-input-element {
+  width: 100%;
+  background-color: transparent;
+  color: white;
+}
+.search-button {
+  background-color: transparent;
+  border: none;
+}
+.search-icon {
+  color: white;
+  font-size: 20px;
+}
+.retry-button {
+  background-color: #4f46e5;
+  margin-top: 10px;
+  border: none;
+  color: white;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
