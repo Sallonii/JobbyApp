@@ -1,0 +1,49 @@
+.job-li-item {
+  list-style-type: none;
+  color: white;
+  border-style: solid;
+  border-color: white;
+  background-color: #272727;
+  padding: 10px;
+  height: 250px;
+  width: 100%;
+}
+.logo-and-title-container {
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+.company-logo-url {
+  height: 100%;
+  margin-right: 5px;
+}
+.job-title {
+  font-size: 14px;
+}
+.rating-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 40px;
+}
+.jobs-middle-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.location-and-type-container {
+  display: flex;
+  align-items: center;
+}
+.icon-container {
+  display: flex;
+  align-items: center;
+  min-width: 80px;
+  margin-right: 10px;
+}
+.jobs-description-heading {
+  font-size: 18px;
+}
+.jobs-description {
+  font-size: 12px;
+}

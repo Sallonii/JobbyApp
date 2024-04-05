@@ -5,6 +5,7 @@ import Cookies from 'js-cookie'
 import {BsSearch} from 'react-icons/bs'
 
 import Header from '../Header'
+import JobItem from '../JobItem'
 
 import './index.css'
 
@@ -139,6 +140,11 @@ class Jobs extends Component {
                 <BsSearch className="search-icon" />
               </button>
               <input className="jobs-search-input-element" type="text" />
+            </div>
+            <div className="job-list-ul-container">
+              {jobsList.map(eachJob => (
+                <JobItem jobDetails={eachJob} key={eachJob.id} />
+              ))}
             </div>
           </div>
         </div>
