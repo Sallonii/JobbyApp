@@ -1,12 +1,14 @@
 .job-li-item {
   list-style-type: none;
   color: white;
-  border-style: solid;
-  border-color: white;
   background-color: #272727;
   padding: 10px;
-  height: 250px;
+  min-height: 250px;
   width: 100%;
+  margin-top: 10px;
+
+  border-radius: 10px;
+  cursor: pointer;
 }
 .logo-and-title-container {
   display: flex;

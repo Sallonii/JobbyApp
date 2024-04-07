@@ -41,7 +41,7 @@ const Header = props => {
         className="find-jobs-button desktop-logout-button"
         onClick={onLogout}
       >
-        Find Jobs
+        Log Out
       </button>
       <ul className="nav-link-container mobile-nav-item">
         <li className="nav-link">

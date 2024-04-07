@@ -7,14 +7,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-style: solid;
-  border-color: white;
 }
 .profile-and-category-container {
-  height: 65vh;
+  min-height: 65vh;
   padding: 10px;
-  border-style: solid;
-  border-color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -116,11 +112,24 @@ hr {
   cursor: pointer;
 }
 .job-list-ul-container {
-  border-style: solid;
-  border-color: white;
   overflow-y: auto;
   scrollbar-width: none;
   height: 700px;
   max-width: 650px;
   width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .desktop-input {
+    display: none;
+  }
+}
+.mobile-input {
+  margin-bottom: 10px;
+}
+
+@media screen and (min-width: 767px) {
+  .mobile-input {
+    display: none;
+  }
 }

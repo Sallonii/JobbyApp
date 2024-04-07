@@ -3,18 +3,29 @@ import {Component} from 'react'
 import Cookies from 'js-cookie'
 
 import {BsSearch} from 'react-icons/bs'
+import Loader from 'react-loader-spinner'
 
 import Header from '../Header'
 import JobItem from '../JobItem'
 
 import './index.css'
 
+const statusConstants = {
+  initial: 'INITIAL',
+  success: 'SUCCESS',
+  failure: 'FAILURE',
+  inProgress: 'IN_PROGRESS',
+}
+
 class Jobs extends Component {
   state = {
     profileData: '',
-    profileError: false,
+    profileStatus: statusConstants.initial,
     jobsList: [],
-    jobListError: false,
+    jobStatus: statusConstants.initial,
+    searchInput: '',
+    employmentTypeArray: [],
+    salaryPackage: '0',
   }
 
   componentDidMount() {
@@ -23,7 +34,11 @@ class Jobs extends Component {
   }
 
   getJobsList = async () => {
-    const jobsUrl = 'https://apis.ccbp.in/jobs'
+    const {searchInput, employmentTypeArray, salaryPackage} = this.state
+    const employmentTypeString = employmentTypeArray.join()
+
+    this.setState({jobStatus: statusConstants.inProgress})
+    const jobsUrl = `https://apis.ccbp.in/jobs?employment_type=${employmentTypeString}&minimum_package=${salaryPackage}&search=${searchInput}`
     const jwtToken = Cookies.get('jwt_token')
     const options = {
       headers: {
@@ -44,13 +59,24 @@ class Jobs extends Component {
         rating: eachJob.rating,
         title: eachJob.title,
       }))
-      this.setState({jobsList: updatedData, jobListError: false})
+      this.setState({jobsList: updatedData, jobStatus: statusConstants.success})
     } else {
-      this.setState({jobListError: true})
+      this.setState({jobStatus: statusConstants.failure})
+    }
+
+    const {jobsList} = this.state
+
+    if (jobsList.length === 0) {
+      this.setState({jobStatus: statusConstants.failure})
+    } else {
+      this.setState({
+        jobStatus: statusConstants.success,
+      })
     }
   }
 
   getProfileDetails = async () => {
+    this.setState({profileStatus: statusConstants.inProgress})
     const profileUrl = 'https://apis.ccbp.in/profile'
     const jwtToken = Cookies.get('jwt_token')
     const options = {
@@ -67,85 +93,217 @@ class Jobs extends Component {
         profileImageUrl: data.profile_details.profile_image_url,
         bio: data.profile_details.short_bio,
       }
-      this.setState({profileData: formattedData, profileError: false})
+      this.setState({
+        profileData: formattedData,
+        profileStatus: statusConstants.success,
+      })
     } else {
-      this.setState({profileError: true})
+      this.setState({profileStatus: statusConstants.failure})
+    }
+  }
+
+  onChangingSearchValue = event => {
+    this.setState({searchInput: event.target.value})
+  }
+
+  onClickingSearch = () => {
+    this.setState({jobStatus: statusConstants.inProgress}, this.getJobsList)
+  }
+
+  renderProfile = () => {
+    const {profileData, profileStatus} = this.state
+    const {name, profileImageUrl, bio} = profileData
+
+    let profileError
+    if (profileStatus === 'SUCCESS') {
+      profileError = false
+    } else {
+      profileError = true
+    }
+    return (
+      <>
+        {!profileError && (
+          <div className="profile-card">
+            <img src={profileImageUrl} alt="profile" className="profile" />
+            <h1 className="profile-heading">{name}</h1>
+            <p className="profile-description">{bio}</p>
+          </div>
+        )}
+        {profileError && (
+          <button type="button" className="retry-button">
+            Retry
+          </button>
+        )}
+      </>
+    )
+  }
+
+  onClickingEmploymentType = event => {
+    const {employmentTypeArray} = this.state
+
+    const newArray = employmentTypeArray.copyWithin()
+
+    if (newArray.includes(event.target.value)) {
+      const index = newArray.indexOf(event.target.value)
+      newArray.splice(index, 1)
+    } else {
+      newArray.push(event.target.value)
+    }
+
+    this.setState({employmentTypeArray: newArray}, this.getJobsList)
+  }
+
+  onClickingSalaryRange = event => {
+    this.setState({salaryPackage: event.target.value}, this.getJobsList)
+  }
+
+  renderCategoryList = () => {
+    const {employmentTypesList, salaryRangesList} = this.props
+    return (
+      <>
+        <h1 className="category-heading">Type of Employment</h1>
+        <div>
+          {employmentTypesList.map(eachType => (
+            <li
+              className="employment-type-list"
+              key={eachType.employmentTypeId}
+            >
+              <input
+                id={eachType.label}
+                type="checkbox"
+                className="input-element"
+                value={eachType.employmentTypeId}
+                onClick={this.onClickingEmploymentType}
+              />
+              <label htmlFor={eachType.label}>{eachType.label}</label>
+            </li>
+          ))}
+        </div>
+        <hr />
+        <h1 className="category-heading">Salary Range</h1>
+        <div>
+          {salaryRangesList.map(eachType => (
+            <li className="employment-type-list" key={eachType.salaryRangeId}>
+              <input
+                id={eachType.label}
+                type="radio"
+                className="input-element"
+                onClick={this.onClickingSalaryRange}
+                value={eachType.salaryRangeId}
+              />
+              <label htmlFor={eachType.label}>{eachType.label}</label>
+            </li>
+          ))}
+        </div>
+      </>
+    )
+  }
+
+  renderJobsList = () => {
+    const {jobsList} = this.state
+    return (
+      <div className="job-list-ul-container">
+        {jobsList.map(eachJob => (
+          <JobItem jobDetails={eachJob} key={eachJob.id} />
+        ))}
+      </div>
+    )
+  }
+
+  renderLoadingView = () => (
+    <div className="loader-container" data-testid="loader">
+      <Loader type="ThreeDots" color="#ffffff" height="50" width="50" />
+    </div>
+  )
+
+  renderFailureView = () => (
+    <div className="failure-view-jobs-container">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
+        alt="failure view"
+      />
+      <h1>Oops! Something Went Wrong</h1>
+      <p>We cannot seem to find the page you are looking for.</p>
+      <button type="button" className="retry-button">
+        Retry
+      </button>
+    </div>
+  )
+
+  renderProfileSection = () => {
+    const {profileStatus} = this.state
+    switch (profileStatus) {
+      case statusConstants.success:
+        return this.renderProfile()
+      case statusConstants.inProgress:
+        return this.renderLoadingView()
+      default:
+        return null
+    }
+  }
+
+  renderJobsSection = () => {
+    const {jobStatus} = this.state
+    switch (jobStatus) {
+      case statusConstants.success:
+        return this.renderJobsList()
+      case statusConstants.inProgress:
+        return this.renderLoadingView()
+      case statusConstants.failure:
+        return this.renderFailureView()
+      default:
+        return null
     }
   }
 
   render() {
-    const {employmentTypesList, salaryRangesList} = this.props
-    const {profileData, profileError, jobsList, jobListError} = this.state
-    const {name, profileImageUrl, bio} = profileData
     return (
       <>
         <Header />
         <div className="jobs-section-container">
           <div className="profile-and-category-container">
-            {!profileError && (
-              <div className="profile-card">
-                <img src={profileImageUrl} alt="profile" className="profile" />
-                <h1 className="profile-heading">{name}</h1>
-                <p className="profile-description">{bio}</p>
-              </div>
-            )}
-            {profileError && (
-              <button type="button" className="retry-button">
-                Retry
-              </button>
-            )}
-            <hr />
-            <h1 className="category-heading">Type of Employment</h1>
-            <div>
-              {employmentTypesList.map(eachType => (
-                <li
-                  className="employment-type-list"
-                  key={eachType.employmentTypeId}
-                >
-                  <input
-                    id={eachType.label}
-                    type="checkbox"
-                    className="input-element"
-                  />
-                  <label htmlFor={eachType.label}>{eachType.label}</label>
-                </li>
-              ))}
-            </div>
-            <hr />
-            <h1 className="category-heading">Salary Range</h1>
-            <div>
-              {salaryRangesList.map(eachType => (
-                <li
-                  className="employment-type-list"
-                  key={eachType.salaryRangeId}
-                >
-                  <input
-                    id={eachType.label}
-                    type="checkbox"
-                    className="input-element"
-                  />
-                  <label htmlFor={eachType.label}>{eachType.label}</label>
-                </li>
-              ))}
-            </div>
-          </div>
-          <div className="jobs-container">
-            <div className="jobs-search-input-container">
+            <div className="jobs-search-input-container mobile-input">
+              <input
+                className="jobs-search-input-element"
+                type="search"
+                onChange={this.onChangingSearchValue}
+              />
               <button
                 type="button"
                 data-testid="searchButton"
                 className="search-button"
               >
                 <span>Search Button</span>
-                <BsSearch className="search-icon" />
+                <BsSearch
+                  className="search-icon"
+                  onClick={this.onClickingSearch}
+                />
               </button>
-              <input className="jobs-search-input-element" type="text" />
             </div>
-            <div className="job-list-ul-container">
-              {jobsList.map(eachJob => (
-                <JobItem jobDetails={eachJob} key={eachJob.id} />
-              ))}
+            {this.renderProfileSection()}
+            <hr />
+            {this.renderCategoryList()}
+          </div>
+          <div className="jobs-container">
+            <div className="jobs-search-input-container desktop-input">
+              <input
+                className="jobs-search-input-element"
+                type="search"
+                onChange={this.onChangingSearchValue}
+              />
+              <button
+                type="button"
+                data-testid="searchButton"
+                className="search-button"
+              >
+                <span>Search Button</span>
+                <BsSearch
+                  className="search-icon"
+                  onClick={this.onClickingSearch}
+                />
+              </button>
             </div>
+            {this.renderJobsSection()}
           </div>
         </div>
       </>
