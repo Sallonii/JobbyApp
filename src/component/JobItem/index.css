@@ -49,3 +49,6 @@
 .jobs-description {
   font-size: 12px;
 }
+.job-link-item {
+  text-decoration: none;
+}

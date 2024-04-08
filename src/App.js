@@ -5,6 +5,7 @@ import ProtectedRoute from './component/ProtectedRoute'
 import Home from './component/Home'
 import Jobs from './component/Jobs'
 import NotFound from './component/NotFound'
+import JobItemDetails from './component/JobItemDetails'
 
 import './App.css'
 
@@ -63,6 +64,7 @@ const App = () => (
         />
       )}
     />
+    <ProtectedRoute exact path="/jobs/:id" component={JobItemDetails} />
     <Route path="/not-found" component={NotFound} />
     <Redirect to="not-found" />
   </Switch>
