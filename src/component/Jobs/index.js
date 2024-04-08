@@ -15,6 +15,7 @@ const statusConstants = {
   success: 'SUCCESS',
   failure: 'FAILURE',
   inProgress: 'IN_PROGRESS',
+  noJobs: 'NO_JOBS',
 }
 
 class Jobs extends Component {
@@ -25,7 +26,7 @@ class Jobs extends Component {
     jobStatus: statusConstants.initial,
     searchInput: '',
     employmentTypeArray: [],
-    salaryPackage: '0',
+    salaryPackage: '',
   }
 
   componentDidMount() {
@@ -67,7 +68,7 @@ class Jobs extends Component {
     const {jobsList} = this.state
 
     if (jobsList.length === 0) {
-      this.setState({jobStatus: statusConstants.failure})
+      this.setState({jobStatus: statusConstants.noJobs})
     } else {
       this.setState({
         jobStatus: statusConstants.success,
@@ -130,7 +131,11 @@ class Jobs extends Component {
           </div>
         )}
         {profileError && (
-          <button type="button" className="retry-button">
+          <button
+            type="button"
+            className="retry-button"
+            onClick={this.getProfileDetails}
+          >
             Retry
           </button>
         )}
@@ -162,7 +167,7 @@ class Jobs extends Component {
     return (
       <>
         <h1 className="category-heading">Type of Employment</h1>
-        <div>
+        <ul>
           {employmentTypesList.map(eachType => (
             <li
               className="employment-type-list"
@@ -178,10 +183,10 @@ class Jobs extends Component {
               <label htmlFor={eachType.label}>{eachType.label}</label>
             </li>
           ))}
-        </div>
+        </ul>
         <hr />
         <h1 className="category-heading">Salary Range</h1>
-        <div>
+        <ul>
           {salaryRangesList.map(eachType => (
             <li className="employment-type-list" key={eachType.salaryRangeId}>
               <input
@@ -194,7 +199,7 @@ class Jobs extends Component {
               <label htmlFor={eachType.label}>{eachType.label}</label>
             </li>
           ))}
-        </div>
+        </ul>
       </>
     )
   }
@@ -202,11 +207,11 @@ class Jobs extends Component {
   renderJobsList = () => {
     const {jobsList} = this.state
     return (
-      <div className="job-list-ul-container">
+      <ul className="job-list-ul-container">
         {jobsList.map(eachJob => (
           <JobItem jobDetails={eachJob} key={eachJob.id} />
         ))}
-      </div>
+      </ul>
     )
   }
 
@@ -227,6 +232,18 @@ class Jobs extends Component {
       <button type="button" className="retry-button" onClick={this.getJobsList}>
         Retry
       </button>
+    </div>
+  )
+
+  renderNoJobsList = () => (
+    <div className="no-jobs-container">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
+        alt="no jobs"
+        className="no-jobs-image"
+      />
+      <h1>No Jobs Found</h1>
+      <p>We could not find any jobs. Try other filters</p>
     </div>
   )
 
@@ -251,6 +268,8 @@ class Jobs extends Component {
         return this.renderLoadingView()
       case statusConstants.failure:
         return this.renderFailureView()
+      case statusConstants.noJobs:
+        return this.renderNoJobsList()
       default:
         return null
     }
