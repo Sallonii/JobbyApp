@@ -60,19 +60,19 @@ class Jobs extends Component {
         rating: eachJob.rating,
         title: eachJob.title,
       }))
-      this.setState({jobsList: updatedData, jobStatus: statusConstants.success})
+
+      if (updatedData.length === 0) {
+        this.setState({
+          jobStatus: statusConstants.noJobs,
+        })
+      } else {
+        this.setState({
+          jobsList: updatedData,
+          jobStatus: statusConstants.success,
+        })
+      }
     } else {
       this.setState({jobStatus: statusConstants.failure})
-    }
-
-    const {jobsList} = this.state
-
-    if (jobsList.length === 0) {
-      this.setState({jobStatus: statusConstants.noJobs})
-    } else {
-      this.setState({
-        jobStatus: statusConstants.success,
-      })
     }
   }
 
@@ -247,6 +247,16 @@ class Jobs extends Component {
     </div>
   )
 
+  renderProfileFailure = () => (
+    <button
+      type="button"
+      className="retry-button"
+      onClick={this.getProfileDetails}
+    >
+      Retry
+    </button>
+  )
+
   renderProfileSection = () => {
     const {profileStatus} = this.state
     switch (profileStatus) {
@@ -254,6 +264,8 @@ class Jobs extends Component {
         return this.renderProfile()
       case statusConstants.inProgress:
         return this.renderLoadingView()
+      case statusConstants.failure:
+        return this.renderProfileFailure()
       default:
         return null
     }
@@ -291,12 +303,10 @@ class Jobs extends Component {
                 type="button"
                 data-testid="searchButton"
                 className="search-button"
+                onClick={this.onClickingSearch}
               >
                 <span>Search Button</span>
-                <BsSearch
-                  className="search-icon"
-                  onClick={this.onClickingSearch}
-                />
+                <BsSearch className="search-icon" />
               </button>
             </div>
             {this.renderProfileSection()}
@@ -314,12 +324,10 @@ class Jobs extends Component {
                 type="button"
                 data-testid="searchButton"
                 className="search-button"
+                onClick={this.onClickingSearch}
               >
                 <span>Search Button</span>
-                <BsSearch
-                  className="search-icon"
-                  onClick={this.onClickingSearch}
-                />
+                <BsSearch className="search-icon" />
               </button>
             </div>
             {this.renderJobsSection()}
